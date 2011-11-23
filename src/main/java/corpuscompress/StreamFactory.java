@@ -28,7 +28,6 @@ public class StreamFactory {
     GZIPOutputStream gos = new GZIPOutputStream(baos, true);
     gos.write(base);
     gos.flush();
-    System.out.println(baos.size());
     output = baos.toByteArray();
     ignore = new byte[base.length];
   }

@@ -40,11 +40,15 @@ public class StreamFactoryTest {
 
   @Test
   public void links() throws IOException {
+    link("http://twitpic.com/7i7o21");
+    link("https://plus.google.com/u/0/111091089527727420853/posts/joQC6qnJJ2c");
+  }
+
+  private void link(String test) throws IOException {
     String corpus = new BufferedReader(new FileReader("links.txt")).readLine();
     StreamFactory sf = new StreamFactory(corpus.getBytes());
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     OutputStream outputStream = sf.wrapOutputStream(baos);
-    String test = "http://pic.twitter.com/GJKZLU6z";
     outputStream.write(test.getBytes());
     outputStream.close();
     DataInputStream dis = new DataInputStream(sf.wrapInputStream(new ByteArrayInputStream(baos.toByteArray())));

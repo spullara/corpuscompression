@@ -1,0 +1,21 @@
+The GZIP algorithm uses a corpus built up from the file that you are compressing. If you are trying to compress
+very small objects, you have the issue that overhead and how little it knows working against you. This
+library lets you predefine a corpus for compression and decompression which can give you the benefits
+of a custom compression algorithm without the effort.
+
+There are two test examples:
+
+Corpus: this is a test of the emergency broadcast system. this is only a test.
+Data: testing... emergency! but I'm broadcasting.
+Result: 32 characters compressed vs 43 uncompressed
+
+Corpus: links.txt
+Data: http://twitpic.com/7i7o21
+Result: 12 characters compressed vs 25 uncompressed vs 45 compressed using GZIP directly
+
+Corpus: links.txt
+Data: http://oink.com/i/4eb383adee44744a9c000d0c
+Result: 58 characters compressed vs 67 uncompressed vs 86 compressed using GZIP directly
+
+I think there is a big gap between the ultimate utility and the current random corpus of URLs
+that I grabbed. Optimizing and evolving that corpus over time would likely be necessary.
