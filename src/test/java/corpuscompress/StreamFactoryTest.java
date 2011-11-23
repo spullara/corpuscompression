@@ -55,17 +55,18 @@ public class StreamFactoryTest {
 
   @Test
   public void links() throws IOException {
-    link("links.txt", "http://twitpic.com/7i7o21");
-    link("links.txt", "https://plus.google.com/u/0/111091089527727420853/posts/joQC6qnJJ2c");
-    link("links2.txt", "http://twitpic.com/7i7o21");
-    link("links2.txt", "https://plus.google.com/u/0/111091089527727420853/posts/joQC6qnJJ2c");
-    link("links3.txt", "http://twitpic.com/7i7o21");
-    link("links3.txt", "https://plus.google.com/u/0/111091089527727420853/posts/joQC6qnJJ2c");
-    link("links4.txt", "http://twitpic.com/7i7o21");
-    link("links4.txt", "https://plus.google.com/u/0/111091089527727420853/posts/joQC6qnJJ2c");
+    test("links.txt", "http://twitpic.com/7i7o21");
+    test("links.txt", "https://plus.google.com/u/0/111091089527727420853/posts/joQC6qnJJ2c");
+    test("links2.txt", "http://twitpic.com/7i7o21");
+    test("links2.txt", "https://plus.google.com/u/0/111091089527727420853/posts/joQC6qnJJ2c");
+    test("links3.txt", "http://twitpic.com/7i7o21");
+    test("links3.txt", "https://plus.google.com/u/0/111091089527727420853/posts/joQC6qnJJ2c");
+    test("links4.txt", "http://twitpic.com/7i7o21");
+    test("links4.txt", "https://plus.google.com/u/0/111091089527727420853/posts/joQC6qnJJ2c");
+    test("tweets.txt", new BufferedReader(new FileReader("targettweet.txt")).readLine());
   }
 
-  private void link(String fileName, String test) throws IOException {
+  private void test(String fileName, String test) throws IOException {
     String corpus = new BufferedReader(new FileReader(fileName)).readLine();
     StreamFactory sf = new StreamFactory(corpus.getBytes());
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -85,5 +86,6 @@ public class StreamFactoryTest {
     System.out.println(baos.size() + " < " + out.size());
     assertTrue(baos.size() < out.size());
   }
+
 
 }

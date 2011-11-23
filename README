@@ -32,5 +32,9 @@ Corpus: links.txt
 Data: http://oink.com/i/4eb383adee44744a9c000d0c
 Result: 58 characters compressed vs 67 uncompressed vs 86 compressed using GZIP directly
 
+Corpus: tweets.txt
+Data: targettweet.txt
+Result: 63 characters compressed vs 211 uncompressed vs 165 compressed using GZIP directly
+
 I think there is a big gap between the ultimate utility and the current random corpus of URLs
 that I grabbed. Optimizing and evolving that corpus over time would likely be necessary.
