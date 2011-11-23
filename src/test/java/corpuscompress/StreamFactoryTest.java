@@ -49,12 +49,14 @@ public class StreamFactoryTest {
     DataInputStream dis = new DataInputStream(sf.wrapInputStream(new ByteArrayInputStream(baos.toByteArray())));
     String s = dis.readLine();
     assertEquals(test, s);
+    System.out.println("Make sure it works");
     System.out.println(baos.size() + " < " + test.length());
     assertTrue(baos.size() < test.length());
   }
 
   @Test
   public void links() throws IOException {
+    System.out.println("Links with different corpuses");
     test("links.txt", "http://twitpic.com/7i7o21");
     test("links.txt", "https://plus.google.com/u/0/111091089527727420853/posts/joQC6qnJJ2c");
     test("links2.txt", "http://twitpic.com/7i7o21");
@@ -63,7 +65,10 @@ public class StreamFactoryTest {
     test("links3.txt", "https://plus.google.com/u/0/111091089527727420853/posts/joQC6qnJJ2c");
     test("links4.txt", "http://twitpic.com/7i7o21");
     test("links4.txt", "https://plus.google.com/u/0/111091089527727420853/posts/joQC6qnJJ2c");
+    System.out.println("Tweet using 2 other tweets as corpus");
     test("tweets.txt", new BufferedReader(new FileReader("targettweet.txt")).readLine());
+    System.out.println("Optimally using tweet as its own corpus");
+    test("targettweet.txt", new BufferedReader(new FileReader("targettweet.txt")).readLine());
   }
 
   private void test(String fileName, String test) throws IOException {
