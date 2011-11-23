@@ -55,12 +55,18 @@ public class StreamFactoryTest {
 
   @Test
   public void links() throws IOException {
-    link("http://twitpic.com/7i7o21");
-    link("https://plus.google.com/u/0/111091089527727420853/posts/joQC6qnJJ2c");
+    link("links.txt", "http://twitpic.com/7i7o21");
+    link("links.txt", "https://plus.google.com/u/0/111091089527727420853/posts/joQC6qnJJ2c");
+    link("links2.txt", "http://twitpic.com/7i7o21");
+    link("links2.txt", "https://plus.google.com/u/0/111091089527727420853/posts/joQC6qnJJ2c");
+    link("links3.txt", "http://twitpic.com/7i7o21");
+    link("links3.txt", "https://plus.google.com/u/0/111091089527727420853/posts/joQC6qnJJ2c");
+    link("links4.txt", "http://twitpic.com/7i7o21");
+    link("links4.txt", "https://plus.google.com/u/0/111091089527727420853/posts/joQC6qnJJ2c");
   }
 
-  private void link(String test) throws IOException {
-    String corpus = new BufferedReader(new FileReader("links.txt")).readLine();
+  private void link(String fileName, String test) throws IOException {
+    String corpus = new BufferedReader(new FileReader(fileName)).readLine();
     StreamFactory sf = new StreamFactory(corpus.getBytes());
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     OutputStream outputStream = sf.wrapOutputStream(baos);
