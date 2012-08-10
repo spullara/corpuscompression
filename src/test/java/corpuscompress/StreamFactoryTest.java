@@ -21,12 +21,15 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.zip.GZIPOutputStream;
 
 import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -52,6 +55,25 @@ public class StreamFactoryTest {
     System.out.println("Make sure it works");
     System.out.println(baos.size() + " < " + test.length());
     assertTrue(baos.size() < test.length());
+  }
+
+  @Test
+  public void binary() throws IOException {
+    File corpusFile = new File("thrifttweet.bin");
+    byte[] corpus = new byte[(int) corpusFile.length()];
+    new DataInputStream(new FileInputStream(corpusFile)).readFully(corpus);
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    StreamFactory sf = new StreamFactory(corpus);
+    File targetFile = new File("thrifttweettarget.bin");
+    byte[] target = new byte[(int) targetFile.length()];
+    new DataInputStream(new FileInputStream(targetFile)).readFully(target);
+    OutputStream os = sf.wrapOutputStream(baos);
+    os.write(target);
+    os.close();
+    System.out.println(baos.size() + " <? " + target.length);
+    byte[] check = new byte[(int) targetFile.length()];
+    new DataInputStream(sf.wrapInputStream(new ByteArrayInputStream(baos.toByteArray()))).readFully(check);
+    assertArrayEquals(target, check);
   }
 
   @Test
