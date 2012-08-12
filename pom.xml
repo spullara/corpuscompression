@@ -15,6 +15,12 @@
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>org.iq80.snappy</groupId>
+      <artifactId>snappy</artifactId>
+      <version>0.3-SNAPSHOT</version>
+    </dependency>
+
     <!-- Testing -->
     <dependency>
       <groupId>junit</groupId>

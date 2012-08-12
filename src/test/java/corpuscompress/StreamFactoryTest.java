@@ -15,6 +15,8 @@
  */
 package corpuscompress;
 
+import org.iq80.snappy.SnappyOutputStream;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -40,6 +42,11 @@ import static org.junit.Assert.assertTrue;
  * Time: 9:17 PM
  */
 public class StreamFactoryTest {
+  @BeforeClass
+  public static void setup() {
+    header();
+  }
+
   @Test
   public void works() throws IOException {
     String corpus = "this is a test of the emergency broadcast system. this is only a test.";
@@ -52,8 +59,6 @@ public class StreamFactoryTest {
     DataInputStream dis = new DataInputStream(sf.wrapInputStream(new ByteArrayInputStream(baos.toByteArray())));
     String s = dis.readLine();
     assertEquals(test, s);
-    System.out.println("Make sure it works");
-    System.out.println(baos.size() + " < " + test.length());
     assertTrue(baos.size() < test.length());
   }
 
@@ -70,10 +75,11 @@ public class StreamFactoryTest {
     OutputStream os = sf.wrapOutputStream(baos);
     os.write(target);
     os.close();
-    System.out.println(baos.size() + " <? " + target.length);
     byte[] check = new byte[(int) targetFile.length()];
     new DataInputStream(sf.wrapInputStream(new ByteArrayInputStream(baos.toByteArray()))).readFully(check);
     assertArrayEquals(target, check);
+
+    report(target.length, snap(target).size(), gzip(target).size(), baos.size());
   }
 
   @Test
@@ -87,32 +93,49 @@ public class StreamFactoryTest {
     test("links3.txt", "https://plus.google.com/u/0/111091089527727420853/posts/joQC6qnJJ2c");
     test("links4.txt", "http://twitpic.com/7i7o21");
     test("links4.txt", "https://plus.google.com/u/0/111091089527727420853/posts/joQC6qnJJ2c");
-    System.out.println("Tweet using 2 other tweets as corpus");
     test("tweets.txt", new BufferedReader(new FileReader("targettweet.txt")).readLine());
-    System.out.println("Optimally using tweet as its own corpus");
-    test("targettweet.txt", new BufferedReader(new FileReader("targettweet.txt")).readLine());
   }
 
   private void test(String fileName, String test) throws IOException {
     String corpus = new BufferedReader(new FileReader(fileName)).readLine();
     StreamFactory sf = new StreamFactory(corpus.getBytes());
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    OutputStream outputStream = sf.wrapOutputStream(baos);
+    ByteArrayOutputStream corpused = new ByteArrayOutputStream();
+    OutputStream outputStream = sf.wrapOutputStream(corpused);
     outputStream.write(test.getBytes());
     outputStream.close();
-    DataInputStream dis = new DataInputStream(sf.wrapInputStream(new ByteArrayInputStream(baos.toByteArray())));
+    DataInputStream dis = new DataInputStream(sf.wrapInputStream(new ByteArrayInputStream(corpused.toByteArray())));
     String s = dis.readLine();
     assertEquals(test, s);
-    System.out.println(baos.size() + " < " + test.length());
-    assertTrue(baos.size() < test.length());
+    assertTrue(corpused.size() < test.length());
 
-    ByteArrayOutputStream out = new ByteArrayOutputStream();
-    GZIPOutputStream gos = new GZIPOutputStream(out);
-    gos.write(test.getBytes());
-    gos.close();
-    System.out.println(baos.size() + " < " + out.size());
-    assertTrue(baos.size() < out.size());
+    ByteArrayOutputStream gzippped = gzip(test.getBytes());
+    assertTrue(corpused.size() < gzippped.size());
+
+    report(test.length(), snap(test.getBytes()).size(), gzippped.size(), corpused.size());
   }
 
+  private ByteArrayOutputStream snap(byte[] bytes) throws IOException {
+    ByteArrayOutputStream snapped = new ByteArrayOutputStream();
+    SnappyOutputStream sos = new SnappyOutputStream(snapped);
+    sos.write(bytes);
+    sos.close();
+    return snapped;
+  }
+
+  private ByteArrayOutputStream gzip(byte[] bytes) throws IOException {
+    ByteArrayOutputStream gzippped = new ByteArrayOutputStream();
+    GZIPOutputStream gos = new GZIPOutputStream(gzippped);
+    gos.write(bytes);
+    gos.close();
+    return gzippped;
+  }
+
+  private static void header() {
+    System.out.println("original,snappy,gzip,corpus");
+  }
+
+  private void report(int original, int snappy, int gzip, int corpus) {
+    System.out.println(original + "," + snappy + "," + gzip + "," + corpus);
+  }
 
 }
